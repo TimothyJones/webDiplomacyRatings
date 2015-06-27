@@ -58,8 +58,16 @@ func (*OnlyWTA) Accept(players []*Player) bool {
 	}
 	return false
 }
+
 func (*OnlyFullPress) Accept(players []*Player) bool {
 	if players[0].pressType == "Regular" {
+		return true
+	}
+	return false
+}
+
+func (*OnlyGunboat) Accept(players []*Player) bool {
+	if players[0].pressType == "NoPress" {
 		return true
 	}
 	return false
