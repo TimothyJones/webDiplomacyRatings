@@ -10,7 +10,18 @@ import (
 )
 
 func main() {
-	answer := scan()
+	//How shall we rank players?
+	ranking := NewTinRanker()
+
+	// which games shall we accept?
+	filter := &GameFilter{[]GameAcceptor{
+		&OnlyClassic{},
+		&NonLive{},
+		&OnlyWTA{},
+		&OnlyFullPress{},
+	}}
+
+	answer := scan(ranking, filter)
 	fmt.Println(answer, "classic games")
 }
 
@@ -121,7 +132,7 @@ func parsePlayer(line []string) (*Player, error) {
 	}, nil
 }
 
-func scan() int {
+func scan(ranking Ranker, filter *GameFilter) int {
 	file, err := os.Open("ghostRatingData.txt")
 	if err != nil {
 		log.Fatal(err)
@@ -136,17 +147,9 @@ func scan() int {
 	numGames := 0
 
 	var gamePlayers []*Player
-	ranking := NewTinRanker()
 	names := make(map[int64]string)
 	mode := "games"
 
-	// which games shall we accept?
-	filter := &GameFilter{[]GameAcceptor{
-		&OnlyClassic{},
-		&NonLive{},
-		&OnlyWTA{},
-		&OnlyFullPress{},
-	}}
 	for scanner.Scan() {
 		line := scanner.Text()
 		A := strings.Split(strings.Replace(line, "\"", "", -1), ",")
