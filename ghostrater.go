@@ -74,7 +74,7 @@ func (r *ghostRanker) AddGame(players []*Player) {
 			}
 		}
 
-		kFactor := 40.0 //sumRatings / 17.5
+		kFactor := sumRatings / 17.5
 		expectedOutcome := r.Rating(players[i].userID) / sumRatings
 
 		newRating := r.Rating(players[i].userID) + (kFactor * (actualOutcome - expectedOutcome))
